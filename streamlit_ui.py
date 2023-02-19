@@ -1,45 +1,42 @@
-
-Save New Duplicate & Edit Just Text Twitter
-# generate a boilerplate streamlit app with text fields for text prompt, a slider for duration, and a button to generate music
 import streamlit as st
 import requests
 import time
 import openai
-openai.api_key = "your-api-key-here"
-openai.organization = "organisation_id"
 import random
 
+openai.api_key = "YOUR_API_KEY_HERE"
+openai.organization = "YOUR_ORG_HERE"
+
 st.title("BeatBuilder")
-prompt = st.text_input("Enter text prompt")
+prompt = st.text_input("Enter the type of music you want to generate")
 duration = st.slider("Enter duration of music in seconds", 1, 90)
+
 if st.button("Generate Music") and (prompt and duration != ""):
     # generate music with all prompts
-
     with st.spinner('Generating music...'):
-        #play audio
         r = requests.post('https://api-b2b.mubert.com/v2/TTMRecordTrack', json={
             "method": "TTMRecordTrack",
             "params":
                 {
                     "text": prompt,
-                    "pat": "public-access-token-here",
+                    "pat": "bWVldHNpZGRoYW50LjE4NDI0MDA2LjMyZmRlZjhiNjE0NTY2OGViZmQ3YjljMjAwNDFmMDliZDZlYmQ2Y2YuMS4z.890efd0e440eddeb4779123939193a3899428fbb5df1a943811655f1883f74b3",
                     "mode": "loop",
                     "duration": duration,
                     "bitrate": "128"
                 }
         })
         response = r.json()
-       # print(response)
+        # creating music with the mubert api
 
         url = response['data']
         url = url['tasks']
         url = url[0]['download_link']
 
-        # print(url)
-        theme=random.choice(['surrealism','3D illustration','3D illustration','Geometric','Retro','Realism'])
+        theme = random.choice(['surrealism', '3D illustration', '3D illustration', 'Geometric', 'Retro', 'Realism'])
         dall_e_prompt = f"an album cover for a {prompt} music in {theme} style"
+        # using dall-e to generate album cover
         response2 = openai.Image.create(
-            prompt=dall_e_prompt,  # TODO: this is input
+            prompt=dall_e_prompt,
             n=1,
             size="256x256",
         )
@@ -53,17 +50,12 @@ if st.button("Generate Music") and (prompt and duration != ""):
 
         json_data = {
             'model': 'text-davinci-003',
-            'prompt': f'Give me a song name for {prompt} music and a made up artist',  #
+            'prompt': f'Give me a song name for {prompt} music and a made up artist',
             'max_tokens': 12,
-        }
+        } # using openai to generate song name
 
-        response = requests.post('https://api.openai.com/v1/completions', headers=headers, json=json_data)
-        song_name = (response.json()['choices'][0]['text'])
-        print('Prompt: ', prompt)
-        print('Tags: ', tags)
-        print('Duration: ', duration)
-        print('Dall-E prompt: ', dall_e_prompt)
-        print('Song name: ', song_name)
+        response3 = requests.post('https://api.openai.com/v1/completions', headers=headers, json=json_data)
+        song_name = (response3.json()['choices'][0]['text'])
         time.sleep(7)
     st.header(song_name)
     col1, col2 = st.columns([1, 2])
