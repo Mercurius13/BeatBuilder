@@ -19,7 +19,7 @@ if st.button("Generate Music") and (prompt and duration != ""):
             "params":
                 {
                     "text": prompt,
-                    "pat": "bWVldHNpZGRoYW50LjE4NDI0MDA2LjMyZmRlZjhiNjE0NTY2OGViZmQ3YjljMjAwNDFmMDliZDZlYmQ2Y2YuMS4z.890efd0e440eddeb4779123939193a3899428fbb5df1a943811655f1883f74b3",
+                    "pat": "MUBERT_PAT",
                     "mode": "loop",
                     "duration": duration,
                     "bitrate": "128"
